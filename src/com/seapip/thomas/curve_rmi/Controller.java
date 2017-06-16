@@ -32,10 +32,11 @@ public class Controller implements Initializable {
 
     @FXML
     public void onKeyPressed(KeyEvent event) {
-        event.consume();
         Direction direction;
         switch (event.getCode()) {
             default:
+                //Ignore event
+                return;
             case UP:
                 direction = Direction.UP;
                 break;
@@ -49,6 +50,7 @@ public class Controller implements Initializable {
                 direction = Direction.RIGHT;
                 break;
         }
+        event.consume();
         game.turn(direction);
     }
 }
