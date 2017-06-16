@@ -12,16 +12,12 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
 
     private Game game;
-
     @FXML
-    Canvas canvas;
+    private Canvas canvas;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.game = new Game();
-
-        canvas.setFocusTraversable(true);
-        canvas.requestFocus();
+        game = new Game();
         (new AnimationTimer() {
             @Override
             public void handle(long now) {
