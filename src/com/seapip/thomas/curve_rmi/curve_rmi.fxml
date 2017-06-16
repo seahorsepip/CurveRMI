@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.layout.GridPane?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="center" minHeight="400.0" minWidth="400.0"
+          onKeyPressed="#onKeyPressed" vgap="10" xmlns="http://javafx.com/javafx/8" fx:controller="com.seapip.thomas.curve_rmi.Controller">
+    <children>
+        <Canvas height="400.0" fx:id="canvas" width="400.0"/>
+    </children>
+</GridPane>
