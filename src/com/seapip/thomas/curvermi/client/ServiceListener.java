@@ -1,8 +1,8 @@
-package com.seapip.thomas.curve_rmi.client;
+package com.seapip.thomas.curvermi.client;
 
-import com.seapip.thomas.curve_rmi.shared.Snake;
-import com.seapip.thomas.curve_rmi.shared.fontyspublisher.IRemotePropertyListener;
-import com.seapip.thomas.curve_rmi.shared.fontyspublisher.IRemotePublisherForListener;
+import com.seapip.thomas.curvermi.shared.Snake;
+import com.seapip.thomas.curvermi.shared.fontyspublisher.IRemotePropertyListener;
+import com.seapip.thomas.curvermi.shared.fontyspublisher.IRemotePublisherForListener;
 
 import java.beans.PropertyChangeEvent;
 import java.rmi.NotBoundException;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class ServiceListener extends UnicastRemoteObject implements IRemotePropertyListener {
 
-    private Callback callback;
+    private transient Callback callback;
 
     protected ServiceListener(Callback callback) throws RemoteException, NotBoundException {
         this.callback = callback;

@@ -1,6 +1,6 @@
-package com.seapip.thomas.curve_rmi.server;
+package com.seapip.thomas.curvermi.server;
 
-import com.seapip.thomas.curve_rmi.shared.IService;
+import com.seapip.thomas.curvermi.shared.IService;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -10,11 +10,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class Main {
-    public static final List<Game> games = Collections.synchronizedList(new ArrayList<>());
-    private static Registry registry;
+    static final List<Game> games = Collections.synchronizedList(new ArrayList<>());
 
     public static void main(String[] args) throws RemoteException {
-        registry = LocateRegistry.createRegistry(1099);
+        Registry registry = LocateRegistry.createRegistry(1099);
         IService service = new Service();
         registry.rebind("Service", service);
     }

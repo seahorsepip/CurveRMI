@@ -1,9 +1,9 @@
-package com.seapip.thomas.curve_rmi.server;
+package com.seapip.thomas.curvermi.server;
 
-import com.seapip.thomas.curve_rmi.shared.Direction;
-import com.seapip.thomas.curve_rmi.shared.Point;
-import com.seapip.thomas.curve_rmi.shared.Snake;
-import com.seapip.thomas.curve_rmi.shared.fontyspublisher.RemotePublisher;
+import com.seapip.thomas.curvermi.shared.Direction;
+import com.seapip.thomas.curvermi.shared.Point;
+import com.seapip.thomas.curvermi.shared.Snake;
+import com.seapip.thomas.curvermi.shared.fontyspublisher.RemotePublisher;
 
 import java.math.BigInteger;
 import java.rmi.RemoteException;
@@ -11,24 +11,17 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Game {
     private String id;
-    private int width;
-    private int height;
     private ArrayList<Snake> snakes;
-    private Date date;
     private RemotePublisher publisher;
     private Registry registry;
     private SecureRandom random = new SecureRandom();
 
 
     public Game(String id) throws RemoteException {
-        width = 400;
-        height = 400;
         snakes = new ArrayList<>();
-        date = new Date();
         this.id = id;
         publisher = new RemotePublisher();
         publisher.registerProperty("snakes");

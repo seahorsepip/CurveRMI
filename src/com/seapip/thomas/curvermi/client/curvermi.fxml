@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.GridPane?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="center" minHeight="400.0" minWidth="400.0"
           xmlns="http://javafx.com/javafx/8"
-          fx:controller="com.seapip.thomas.curve_rmi.client.Controller">
+          fx:controller="com.seapip.thomas.curvermi.client.Controller">
     <children>
         <Canvas height="400.0" fx:id="canvas" width="400.0"/>
     </children>

@@ -1,4 +1,4 @@
-package com.seapip.thomas.curve_rmi.shared;
+package com.seapip.thomas.curvermi.shared;
 
 import java.io.Serializable;
 

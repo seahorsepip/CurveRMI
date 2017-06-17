@@ -1,14 +1,12 @@
-package com.seapip.thomas.curve_rmi.client;
+package com.seapip.thomas.curvermi.client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class Main extends Application {
 
@@ -17,18 +15,18 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(loader.load(getClass().getResource("curve_rmi.fxml").openStream()),
+        primaryStage.setScene(new Scene(loader.load(getClass().getResource("curvermi.fxml").openStream()),
                 400, 400));
         primaryStage.show();
         //Set global key listener
         primaryStage.getScene().setOnKeyPressed(event -> {
             try {
                 ((Controller) loader.getController()).onKeyPressed(event);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+            } catch (RemoteException ignored) {
+                //Ignore
             }
         });
     }

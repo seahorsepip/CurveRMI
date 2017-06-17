@@ -1,4 +1,4 @@
-package com.seapip.thomas.curve_rmi.shared;
+package com.seapip.thomas.curvermi.shared;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Snake implements Serializable {
-    private final float SPEED = 0.01f; //Movement speed in px/ms
+    private static final float SPEED = 0.01f; //Movement speed in px/ms
 
     private String sessionId;
     private Point start;
@@ -33,8 +33,6 @@ public class Snake implements Serializable {
         if (direction != current) {
             boolean valid;
             switch (direction) {
-                default:
-                    return null;
                 case UP:
                     valid = current != Direction.DOWN;
                     break;
@@ -47,9 +45,10 @@ public class Snake implements Serializable {
                 case RIGHT:
                     valid = current != Direction.LEFT;
                     break;
+                default:
+                    return null;
             }
             if (valid) {
-                System.out.println("Direction changed!");
                 Curve curve = new Curve(direction, new Date());
                 this.curves.add(curve);
                 return curve;
@@ -74,6 +73,9 @@ public class Snake implements Serializable {
                 break;
             case RIGHT:
                 x += distance;
+                break;
+            default:
+                //Do nothing
                 break;
         }
         return new Point(x, y);

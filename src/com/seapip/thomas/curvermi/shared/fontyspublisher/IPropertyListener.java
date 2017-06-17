@@ -1,4 +1,4 @@
-package com.seapip.thomas.curve_rmi.shared.fontyspublisher;
+package com.seapip.thomas.curvermi.shared.fontyspublisher;
 
 import java.util.EventListener;
 

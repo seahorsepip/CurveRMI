@@ -1,7 +1,7 @@
-package com.seapip.thomas.curve_rmi.server;
+package com.seapip.thomas.curvermi.server;
 
-import com.seapip.thomas.curve_rmi.shared.Direction;
-import com.seapip.thomas.curve_rmi.shared.IService;
+import com.seapip.thomas.curvermi.shared.Direction;
+import com.seapip.thomas.curvermi.shared.IService;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -20,7 +20,6 @@ public class Service extends UnicastRemoteObject implements IService {
 
     @Override
     public void turn(String id, String sessionId, Direction direction) throws RemoteException {
-        System.out.println("Server turn" + direction.name());
         getGame(id).turn(sessionId, direction);
     }
 
