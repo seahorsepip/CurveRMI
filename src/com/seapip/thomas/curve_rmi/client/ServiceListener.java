@@ -1,7 +1,8 @@
 package com.seapip.thomas.curve_rmi.client;
 
-import com.seapip.thomas.curve_rmi.fontyspublisher.IRemotePropertyListener;
-import com.seapip.thomas.curve_rmi.fontyspublisher.IRemotePublisherForListener;
+import com.seapip.thomas.curve_rmi.shared.Snake;
+import com.seapip.thomas.curve_rmi.shared.fontyspublisher.IRemotePropertyListener;
+import com.seapip.thomas.curve_rmi.shared.fontyspublisher.IRemotePublisherForListener;
 
 import java.beans.PropertyChangeEvent;
 import java.rmi.NotBoundException;

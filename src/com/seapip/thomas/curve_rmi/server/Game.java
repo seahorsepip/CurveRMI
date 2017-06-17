@@ -1,9 +1,9 @@
 package com.seapip.thomas.curve_rmi.server;
 
-import com.seapip.thomas.curve_rmi.client.Direction;
-import com.seapip.thomas.curve_rmi.client.Point;
-import com.seapip.thomas.curve_rmi.client.Snake;
-import com.seapip.thomas.curve_rmi.fontyspublisher.RemotePublisher;
+import com.seapip.thomas.curve_rmi.shared.Direction;
+import com.seapip.thomas.curve_rmi.shared.Point;
+import com.seapip.thomas.curve_rmi.shared.Snake;
+import com.seapip.thomas.curve_rmi.shared.fontyspublisher.RemotePublisher;
 
 import java.math.BigInteger;
 import java.rmi.RemoteException;

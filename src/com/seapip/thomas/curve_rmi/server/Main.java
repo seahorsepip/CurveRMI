@@ -1,5 +1,7 @@
 package com.seapip.thomas.curve_rmi.server;
 
+import com.seapip.thomas.curve_rmi.shared.IService;
+
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;

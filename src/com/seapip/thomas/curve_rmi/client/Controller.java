@@ -1,6 +1,8 @@
 package com.seapip.thomas.curve_rmi.client;
 
-import com.seapip.thomas.curve_rmi.server.IService;
+import com.seapip.thomas.curve_rmi.shared.Direction;
+import com.seapip.thomas.curve_rmi.shared.IService;
+import com.seapip.thomas.curve_rmi.shared.Snake;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

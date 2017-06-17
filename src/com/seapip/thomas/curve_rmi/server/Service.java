@@ -1,6 +1,7 @@
 package com.seapip.thomas.curve_rmi.server;
 
-import com.seapip.thomas.curve_rmi.client.Direction;
+import com.seapip.thomas.curve_rmi.shared.Direction;
+import com.seapip.thomas.curve_rmi.shared.IService;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;

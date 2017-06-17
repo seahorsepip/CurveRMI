@@ -1,22 +1,25 @@
-package com.seapip.thomas.curve_rmi.fontyspublisher;
+package com.seapip.thomas.curve_rmi.shared.fontyspublisher;
 
 import java.beans.PropertyChangeEvent;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
- * ILocalPropertyListener. Interface to local property listener in order to
+ * IRemotePropertyListener. Interface to remote property listener in order to
  * inform the listener about changes in the domain of properties that the
  * listener is subscribed to.
  *
  * @author Frank Peeters, Nico Kuijpers
  */
-public interface ILocalPropertyListener extends IPropertyListener {
+public interface IRemotePropertyListener extends IPropertyListener, Remote {
 
     /**
      * Inform listener about change of a property in the domain. On the basis
      * of the data provided by the instance of PropertyChangeEvent the observer
-     * is synchronized with respect to the domain.
+     * is synchronized with respect to the remote domain.
      *
      * @param evt PropertyChangeEvent @see java.beans.PropertyChangeEvent
+     * @throws RemoteException
      */
-    void propertyChange(PropertyChangeEvent evt);
+    void propertyChange(PropertyChangeEvent evt) throws RemoteException;
 }
