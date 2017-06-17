@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
 
     private String sessionId;
+    private String gameId;
     private IService service;
     private ArrayList<Snake> snakes;
     @FXML
@@ -29,11 +30,12 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        gameId = "Example";
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
             service = (IService) registry.lookup("Service");
-            sessionId = service.connect("Example");
-            new ServiceListener(value -> snakes = value);
+            sessionId = service.connect(gameId);
+            new ServiceListener(gameId, values -> snakes = values);
         } catch (RemoteException | NotBoundException ignored) {
             //Ignore
         }
@@ -77,6 +79,6 @@ public class Controller implements Initializable {
                 return;
         }
         event.consume();
-        service.turn("Example", sessionId, direction);
+        service.turn(gameId, sessionId, direction);
     }
 }

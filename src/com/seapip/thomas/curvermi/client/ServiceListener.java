@@ -16,16 +16,16 @@ public class ServiceListener extends UnicastRemoteObject implements IRemotePrope
 
     private transient Callback callback;
 
-    protected ServiceListener(Callback callback) throws RemoteException, NotBoundException {
+    protected ServiceListener(String id, Callback callback) throws RemoteException, NotBoundException {
         this.callback = callback;
         Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-        IRemotePublisherForListener publisher = (IRemotePublisherForListener) registry.lookup("snakePublisher");
+        IRemotePublisherForListener publisher = (IRemotePublisherForListener) registry.lookup(id);
         publisher.subscribeRemoteListener(this, "snakes");
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
-        this.callback.onSnakesChanged((ArrayList<Snake>) evt.getNewValue());
+        callback.onSnakesChanged((ArrayList<Snake>) evt.getNewValue());
     }
 
     interface Callback {

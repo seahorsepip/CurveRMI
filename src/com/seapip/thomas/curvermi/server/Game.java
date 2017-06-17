@@ -26,7 +26,7 @@ public class Game {
         publisher = new RemotePublisher();
         publisher.registerProperty("snakes");
         registry = LocateRegistry.getRegistry(1099);
-        registry.rebind("snakePublisher", publisher);
+        registry.rebind(id, publisher);
     }
 
     public String connect() throws RemoteException {

@@ -14,8 +14,7 @@ public class Service extends UnicastRemoteObject implements IService {
 
     @Override
     public String connect(String id) throws RemoteException, NotBoundException {
-        Game game = getGame(id);
-        return game.connect();
+        return getGame(id).connect();
     }
 
     @Override
