@@ -1,8 +1,9 @@
-package com.seapip.thomas.curve_rmi;
+package com.seapip.thomas.curve_rmi.client;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Curve {
+public class Curve implements Serializable {
     private Direction direction;
     private Date date;
 

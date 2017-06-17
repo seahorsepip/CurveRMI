@@ -1,4 +1,4 @@
-package com.seapip.thomas.curve_rmi;
+package com.seapip.thomas.curve_rmi.client;
 
 public enum Direction {
     UP,

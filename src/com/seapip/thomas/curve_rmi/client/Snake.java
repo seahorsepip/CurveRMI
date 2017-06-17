@@ -1,38 +1,40 @@
-package com.seapip.thomas.curve_rmi;
+package com.seapip.thomas.curve_rmi.client;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.ThreadLocalRandom;
 
-public class Snake {
-    private final float SPEED = 0.05f; //Movement speed in px/ms
+public class Snake implements Serializable {
+    private final float SPEED = 0.01f; //Movement speed in px/ms
 
+    private String sessionId;
     private Point start;
-    private Direction direction;
     private ArrayList<Curve> curves;
+    private int hue;
 
-    public Snake(Point start) {
+    public Snake(String sessionId, Point start) {
+        this.sessionId = sessionId;
         this.start = start;
-        this.direction = Direction.UP;
-        this.curves = new ArrayList<>();
+        curves = new ArrayList<>();
+        curves.add(new Curve(Direction.UP, new Date()));
+        hue = ThreadLocalRandom.current().nextInt(0, 361);
     }
 
-    public Point getStart() {
-        return start;
+    public boolean ofSession(String id) {
+        return sessionId.equals(id);
     }
 
-    public ArrayList<Curve> getCurves() {
-        return curves;
-    }
-
-    public void turn(Direction direction) {
-        Direction current = (curves.size() > 0 ? curves.get(curves.size() - 1).getDirection() : this.direction);
+    public Curve turn(Direction direction) {
+        Direction current = curves.get(curves.size() - 1).getDirection();
         if (direction != current) {
             boolean valid;
             switch (direction) {
                 default:
+                    return null;
                 case UP:
                     valid = current != Direction.DOWN;
                     break;
@@ -48,9 +50,12 @@ public class Snake {
             }
             if (valid) {
                 System.out.println("Direction changed!");
-                this.curves.add(new Curve(direction, new Date()));
+                Curve curve = new Curve(direction, new Date());
+                this.curves.add(curve);
+                return curve;
             }
         }
+        return null;
     }
 
     private Point movement(Point start, long time, Direction direction) {
@@ -74,19 +79,19 @@ public class Snake {
         return new Point(x, y);
     }
 
-    public void draw(GraphicsContext context, Date begin) {
+    public void draw(GraphicsContext context) {
         Point position = start;
-        context.setStroke(Color.CYAN);
+        context.setStroke(Color.hsb(hue, 1, 1));
         context.setLineWidth(4);
-        for (int i = 0; i < curves.size(); i++) {
-            long time = curves.get(i).getDate().getTime() - (i == 0 ? begin : curves.get(i - 1).getDate()).getTime();
-            Direction direction = i == 0 ? this.direction : curves.get(i - 1).getDirection();
+        for (int i = 1; i < curves.size(); i++) {
+            long time = curves.get(i).getDate().getTime() - curves.get(i - 1).getDate().getTime();
+            Direction direction = curves.get(i - 1).getDirection();
             Point destination = movement(position, time, direction);
             context.strokeLine(position.getX(), position.getY(), destination.getX(), destination.getY());
             position = destination;
         }
-        long time = new Date().getTime() - (curves.size() > 0 ? curves.get(curves.size() - 1).getDate() : begin).getTime();
-        Direction direction = curves.size() > 0 ? curves.get(curves.size() - 1).getDirection() : this.direction;
+        long time = new Date().getTime() - curves.get(curves.size() - 1).getDate().getTime();
+        Direction direction = curves.get(curves.size() - 1).getDirection();
         Point destination = movement(position, time, direction);
         context.strokeLine(position.getX(), position.getY(), destination.getX(), destination.getY());
     }
