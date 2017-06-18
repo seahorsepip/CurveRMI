@@ -5,7 +5,12 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface IGameService extends Remote {
-    String connect(String id) throws RemoteException, NotBoundException;
 
-    void turn(String id, String sessionId, Direction direction) throws RemoteException;
+    String create(String userToken) throws RemoteException, NotBoundException;
+
+    void connect(String gameToken, String userToken) throws RemoteException;
+
+    void disconnect(String gameToken, String userToken) throws RemoteException;
+
+    void turn(String gameToken, String userToken, Direction direction) throws RemoteException;
 }

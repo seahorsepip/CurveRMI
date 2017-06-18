@@ -13,22 +13,19 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Snake implements Serializable {
     private static final double SPEED = 0.01f; //Movement speed in px/ms
 
-    private String sessionId;
     private Point start;
     private ArrayList<Curve> curves;
     private int hue;
     private long lost;
 
-    public Snake(String sessionId, Point start) {
-        this.sessionId = sessionId;
+    public Snake(Point start) {
         this.start = start;
         curves = new ArrayList<>();
-        curves.add(new Curve(Direction.UP, new Date()));
         hue = ThreadLocalRandom.current().nextInt(0, 361);
     }
 
-    public boolean ofSession(String id) {
-        return sessionId.equals(id);
+    public void start(Date date) {
+        curves.add(new Curve(Direction.UP, date));
     }
 
     public Curve turn(Direction direction) {

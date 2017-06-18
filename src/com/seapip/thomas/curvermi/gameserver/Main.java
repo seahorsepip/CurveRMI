@@ -1,20 +1,24 @@
 package com.seapip.thomas.curvermi.gameserver;
 
-import com.seapip.thomas.curvermi.shared.IGameService;
+import com.seapip.thomas.curvermi.shared.User;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 
 public class Main {
-    static final List<Game> games = Collections.synchronizedList(new ArrayList<>());
+    static final HashMap<String, Game> games = new HashMap<>();
+    static final HashMap<String, User> users = new HashMap<>();
+
+    static GameService gameService;
+    static UserService userService;
 
     public static void main(String[] args) throws RemoteException {
+        gameService = new GameService();
+        userService = new UserService();
         Registry registry = LocateRegistry.createRegistry(1099);
-        IGameService service = new GameService();
-        registry.rebind("GameService", service);
+        registry.rebind("GameService", gameService);
+        registry.rebind("UserService", userService);
     }
 }

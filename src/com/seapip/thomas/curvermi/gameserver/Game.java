@@ -1,67 +1,74 @@
 package com.seapip.thomas.curvermi.gameserver;
 
-import com.seapip.thomas.curvermi.shared.Direction;
-import com.seapip.thomas.curvermi.shared.Point;
-import com.seapip.thomas.curvermi.shared.Snake;
+import com.seapip.thomas.curvermi.shared.*;
 import com.seapip.thomas.curvermi.shared.fontyspublisher.RemotePublisher;
 
-import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static com.seapip.thomas.curvermi.gameserver.Main.userService;
+
 class Game {
-    private String id;
-    private ArrayList<Snake> snakes = new ArrayList<>();
+    private boolean started;
+    private int width = 400;
+    private int height = 400;
+    private HashMap<String, Player> players = new HashMap<>();
     private RemotePublisher publisher = new RemotePublisher();
-    private SecureRandom random = new SecureRandom();
-    private Timer timer = new Timer();
 
-
-    Game(String id) throws RemoteException {
-        this.id = id;
-        publisher.registerProperty("snakes");
-        LocateRegistry.getRegistry(1099).rebind(id, publisher);
+    Game(String token) throws RemoteException {
+        publisher.registerProperty("data");
+        LocateRegistry.getRegistry(1099).rebind(token, publisher);
     }
 
-    String connect() {
-        String sessionId = new BigInteger(130, random).toString(32);
-        Snake snake = new Snake(sessionId, new Point(
-                ThreadLocalRandom.current().nextInt(50, 351),
-                ThreadLocalRandom.current().nextInt(50, 351)
-        ));
-        snakes.add(snake);
-        new Thread(() -> {
-            try {
-                Thread.sleep(100);
-                updateClients();
-            } catch (RemoteException | InterruptedException ignored) {
-                //Ignore
+    void start() {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    started = true;
+                    Date date = new Date();
+                    for (Player player : players.values()) {
+                        player.getSnake().start(date);
+                    }
+                    publisher.inform("data", null, players.values());
+                } catch (RemoteException ignored) {
+                    //Ignore
+                }
             }
-        }).start();
-        return sessionId;
+        }, 5000);
     }
 
-    String getId() {
-        return id;
-    }
-
-    void turn(String sessionId, Direction direction) throws RemoteException {
-        for (Snake snake : snakes) {
-            if (snake.ofSession(sessionId)) {
-                snake.turn(direction);
-                calculateFutureOutcome();
-                updateClients();
-                break;
+    void connect(String userToken) throws RemoteException {
+        if (!started) {
+            User user = userService.get(userToken);
+            if (user != null) {
+                players.put(userToken, new Player(user, new Snake(new Point(
+                        ThreadLocalRandom.current().nextInt(width / 4, width / 4 * 3),
+                        ThreadLocalRandom.current().nextInt(height / 4, height / 4 * 3)
+                ))));
             }
         }
     }
 
+    void disconnect(String userToken) throws RemoteException {
+        if (players.containsKey(userToken)) {
+            //players.get(userToken).getSnake().disconnect();
+        }
+    }
+
+    void turn(String userToken, Direction direction) throws RemoteException {
+        if (started && players.containsKey(userToken)) {
+            players.get(userToken).getSnake().turn(direction);
+            publisher.inform("data", null, players.values());
+        }
+    }
+
+    /*
     private void calculateFutureOutcome() {
         timer.cancel();
         timer = new Timer();
@@ -89,8 +96,5 @@ class Game {
             }
         }
     }
-
-    private void updateClients() throws RemoteException {
-        publisher.inform("snakes", null, snakes);
-    }
+    */
 }
