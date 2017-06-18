@@ -1,6 +1,6 @@
-package com.seapip.thomas.curvermi.server;
+package com.seapip.thomas.curvermi.gameserver;
 
-import com.seapip.thomas.curvermi.shared.IService;
+import com.seapip.thomas.curvermi.shared.IGameService;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -14,7 +14,7 @@ public class Main {
 
     public static void main(String[] args) throws RemoteException {
         Registry registry = LocateRegistry.createRegistry(1099);
-        IService service = new Service();
-        registry.rebind("Service", service);
+        IGameService service = new GameService();
+        registry.rebind("GameService", service);
     }
 }

@@ -1,15 +1,15 @@
-package com.seapip.thomas.curvermi.server;
+package com.seapip.thomas.curvermi.gameserver;
 
 import com.seapip.thomas.curvermi.shared.Direction;
-import com.seapip.thomas.curvermi.shared.IService;
+import com.seapip.thomas.curvermi.shared.IGameService;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class Service extends UnicastRemoteObject implements IService {
+public class GameService extends UnicastRemoteObject implements IGameService {
 
-    protected Service() throws RemoteException {
+    protected GameService() throws RemoteException {
     }
 
     @Override

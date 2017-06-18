@@ -1,7 +1,7 @@
 package com.seapip.thomas.curvermi.client;
 
 import com.seapip.thomas.curvermi.shared.Direction;
-import com.seapip.thomas.curvermi.shared.IService;
+import com.seapip.thomas.curvermi.shared.IGameService;
 import com.seapip.thomas.curvermi.shared.Snake;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
@@ -23,7 +23,7 @@ public class Controller implements Initializable {
 
     private String sessionId;
     private String gameId;
-    private IService service;
+    private IGameService service;
     private ArrayList<Snake> snakes;
     @FXML
     private Canvas canvas;
@@ -33,9 +33,9 @@ public class Controller implements Initializable {
         gameId = "Example";
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-            service = (IService) registry.lookup("Service");
+            service = (IGameService) registry.lookup("GameService");
             sessionId = service.connect(gameId);
-            new ServiceListener(gameId, values -> snakes = values);
+            new GameServiceListener(gameId, values -> snakes = values);
         } catch (RemoteException | NotBoundException ignored) {
             //Ignore
         }
