@@ -1,6 +1,7 @@
 package com.seapip.thomas.curvermi.client;
 
-import com.seapip.thomas.curvermi.shared.Snake;
+import com.seapip.thomas.curvermi.shared.Player;
+import com.seapip.thomas.curvermi.shared.Turn;
 import com.seapip.thomas.curvermi.shared.fontyspublisher.IRemotePropertyListener;
 import com.seapip.thomas.curvermi.shared.fontyspublisher.IRemotePublisherForListener;
 
@@ -10,7 +11,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
+import java.util.List;
 
 public class GameServiceListener extends UnicastRemoteObject implements IRemotePropertyListener {
 
@@ -20,15 +21,34 @@ public class GameServiceListener extends UnicastRemoteObject implements IRemoteP
         this.callback = callback;
         Registry registry = LocateRegistry.getRegistry("localhost", 1099);
         IRemotePublisherForListener publisher = (IRemotePublisherForListener) registry.lookup(id);
-        publisher.subscribeRemoteListener(this, "snakes");
+        publisher.subscribeRemoteListener(this, "players");
+        publisher.subscribeRemoteListener(this, "player");
+        publisher.subscribeRemoteListener(this, "turn");
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
-        callback.onSnakesChanged((ArrayList<Snake>) evt.getNewValue());
+        Object value = evt.getNewValue();
+        if (value != null) {
+            switch (evt.getPropertyName()) {
+                case "players":
+                    callback.onPlayers((List<Player>) value);
+                    break;
+                case "player":
+                    callback.onPlayer((Player) value);
+                    break;
+                case "turn":
+                    callback.onTurn((Turn) value);
+                    break;
+            }
+        }
     }
 
     interface Callback {
-        void onSnakesChanged(ArrayList<Snake> snakes);
+        void onPlayers(List<Player> values);
+
+        void onPlayer(Player value);
+
+        void onTurn(Turn value);
     }
 }

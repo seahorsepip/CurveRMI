@@ -2,16 +2,15 @@ package com.seapip.thomas.curvermi.shared;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Snake implements Serializable {
-    private static final double SPEED = 0.01f; //Movement speed in px/ms
+    private static final double SPEED = 0.05f; //Movement speed in px/ms
+    private static final double RADIUS = 20; //Radius in px of a curve
 
     private Point start;
     private ArrayList<Curve> curves;
@@ -25,51 +24,27 @@ public class Snake implements Serializable {
     }
 
     public void start(Date date) {
-        curves.add(new Curve(Direction.UP, date));
+        curves.add(new Curve(Direction.FORWARD, date));
     }
 
     public Curve turn(Direction direction) {
-        Direction current = curves.get(curves.size() - 1).getDirection();
-        if (direction != current && lost == 0) {
-            boolean valid;
-            switch (direction) {
-                case UP:
-                    valid = current != Direction.DOWN;
-                    break;
-                case LEFT:
-                    valid = current != Direction.RIGHT;
-                    break;
-                case DOWN:
-                    valid = current != Direction.UP;
-                    break;
-                case RIGHT:
-                    valid = current != Direction.LEFT;
-                    break;
-                default:
-                    return null;
-            }
-            if (valid) {
-                Curve curve = new Curve(direction, new Date());
-                this.curves.add(curve);
-                return curve;
-            }
-        }
-        return null;
+        return turn(direction, new Date());
     }
 
+    public Curve turn(Direction direction, Date date) {
+        Curve curve = new Curve(direction, date);
+        this.curves.add(curve);
+        return curve;
+    }
+
+    /*
     private Point movement(Point start, long time, Direction direction) {
         double x = start.getX();
         double y = start.getY();
         double distance = time * SPEED;
         switch (direction) {
-            case UP:
-                y -= distance;
-                break;
             case LEFT:
                 x -= distance;
-                break;
-            case DOWN:
-                y += distance;
                 break;
             case RIGHT:
                 x += distance;
@@ -79,36 +54,50 @@ public class Snake implements Serializable {
                 break;
         }
         return new Point(x, y);
-    }
+    }*/
 
     public void draw(GraphicsContext context) {
+        double rotation = 0;
         Point position = start;
         context.setStroke(Color.hsb(hue, 1, 1));
         context.setLineWidth(4);
         for (int i = 1; i < curves.size(); i++) {
             long time = curves.get(i).getDate().getTime() - curves.get(i - 1).getDate().getTime();
             Direction direction = curves.get(i - 1).getDirection();
-            Point destination = movement(position, time, direction);
-            context.strokeLine(position.getX(), position.getY(), destination.getX(), destination.getY());
+            if(direction != Direction.FORWARD) {
+                rotation += time * SPEED * (curves.get(i - 1).getDirection() == Direction.LEFT ? -1 : 1);
+            }
+            Point destination = new Point(
+                    position.getX() + Math.sin(rotation) * time * SPEED,
+                    position.getY() - Math.cos(rotation) * time * SPEED);
+            if(direction == Direction.FORWARD) {
+                context.strokeLine(position.getX(), position.getY(), destination.getX(), destination.getY());
+            } else {
+                context.arcTo(position.getX(), position.getY(), destination.getX(), destination.getY(), RADIUS);
+            }
             position = destination;
         }
         long time = (lost == 0 ? new Date().getTime() : lost) - curves.get(curves.size() - 1).getDate().getTime();
         Direction direction = curves.get(curves.size() - 1).getDirection();
-        Point destination = movement(position, time, direction);
-        context.strokeLine(position.getX(), position.getY(), destination.getX(), destination.getY());
+        if(direction != Direction.FORWARD) {
+            rotation += time * SPEED * (curves.get(curves.size() - 1).getDirection() == Direction.LEFT ? -1 : 1);
+        }
+        Point destination = new Point(
+                position.getX() + Math.sin(rotation) * time * SPEED,
+                position.getY() - Math.cos(rotation) * time * SPEED);
+        if(direction == Direction.FORWARD) {
+            context.strokeLine(position.getX(), position.getY(), destination.getX(), destination.getY());
+        } else {
+            context.arcTo(position.getX(), position.getY(), destination.getX(), destination.getY(), RADIUS);
+        }
     }
 
+    /*
     private long moment(Line line, Point point, Direction direction) {
         double offset = 0;
         switch (direction) {
-            case UP:
-                offset = line.getStartY() - point.getY();
-                break;
             case LEFT:
                 offset = line.getStartX() - point.getX();
-                break;
-            case DOWN:
-                offset = point.getY() - line.getStartY();
                 break;
             case RIGHT:
                 offset = point.getX() - line.getStartX();
@@ -203,7 +192,7 @@ public class Snake implements Serializable {
             time = moment(line, intersection, direction) + curves.get(curves.size() - 1).getDate().getTime();
         }
         return time;
-    }
+    }*/
 
     public long getLost() {
         return lost;

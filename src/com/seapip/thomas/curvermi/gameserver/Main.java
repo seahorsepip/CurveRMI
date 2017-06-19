@@ -8,17 +8,15 @@ import java.rmi.registry.Registry;
 import java.util.HashMap;
 
 public class Main {
-    static final HashMap<String, Game> games = new HashMap<>();
+    static final HashMap<String, GameService> games = new HashMap<>();
     static final HashMap<String, User> users = new HashMap<>();
 
-    static GameService gameService;
-    static UserService userService;
+    static UserPublisher userPublisher;
 
     public static void main(String[] args) throws RemoteException {
-        gameService = new GameService();
-        userService = new UserService();
         Registry registry = LocateRegistry.createRegistry(1099);
-        registry.rebind("GameService", gameService);
-        registry.rebind("UserService", userService);
+        registry.rebind("GamePublisher", new GamePublisher());
+        userPublisher = new UserPublisher();
+        //registry.rebind("UserPublisher", userPublisher);
     }
 }

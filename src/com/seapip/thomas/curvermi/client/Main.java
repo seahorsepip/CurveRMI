@@ -29,5 +29,12 @@ public class Main extends Application {
                 //Ignore
             }
         });
+        primaryStage.getScene().setOnKeyReleased(event -> {
+            try {
+                ((Controller) loader.getController()).onKeyReleased(event);
+            } catch (RemoteException ignored) {
+                //Ignore
+            }
+        });
     }
 }

@@ -1,8 +1,12 @@
 package com.seapip.thomas.curvermi.shared;
 
-public class Player {
-    User user;
-    Snake snake;
+import java.io.Serializable;
+import java.util.Date;
+
+public class Player implements Serializable {
+    private User user;
+    private Snake snake;
+    private boolean connected = true;
 
     public Player(User user, Snake snake) {
         this.user = user;
@@ -15,5 +19,10 @@ public class Player {
 
     public Snake getSnake() {
         return snake;
+    }
+
+    public void disconnect() {
+        snake.setLost(new Date().getTime());
+        connected = false;
     }
 }

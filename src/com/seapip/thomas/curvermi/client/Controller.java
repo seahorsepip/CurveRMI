@@ -1,13 +1,12 @@
 package com.seapip.thomas.curvermi.client;
 
-import com.seapip.thomas.curvermi.shared.Direction;
-import com.seapip.thomas.curvermi.shared.IGameService;
-import com.seapip.thomas.curvermi.shared.Snake;
+import com.seapip.thomas.curvermi.shared.*;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
@@ -16,26 +15,63 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
-    private String sessionId;
-    private String gameId;
-    private IGameService service;
-    private ArrayList<Snake> snakes;
+    private IUserService userService;
+    private ILobbyService lobbyService;
+    private IGameService gameService;
+    private String userToken;
+    private String gameToken;
+    private List<Player> players;
     @FXML
     private Canvas canvas;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        gameId = "Example";
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-            service = (IGameService) registry.lookup("GameService");
-            sessionId = service.connect(gameId);
-            new GameServiceListener(gameId, values -> snakes = values);
+            userService = (IUserService) registry.lookup("UserPublisher");
+            lobbyService = (ILobbyService) registry.lookup("LobbyPublisher");
+            gameService = (IGameService) registry.lookup("GamePublisher");
+            System.out.println(userService);
+            System.out.println(lobbyService);
+            System.out.println(gameService);
+            userToken = userService.login("seahorsepip", "12345");
+            gameToken = gameService.create(userToken);
+            gameService.connect(gameToken, userToken);
+            gameService.start(gameToken);
+            new GameServiceListener(gameToken, new GameServiceListener.Callback() {
+                @Override
+                public void onPlayers(List<Player> values) {
+                    players = values;
+                    System.out.println("New players :D");
+                }
+
+                @Override
+                public void onPlayer(Player value) {
+                    for (int i = 0; i < players.size(); i++) {
+                        Player player = players.get(i);
+                        if (players.get(i).getUser().getUsername().equals(value.getUser().getUsername())) {
+                            players.remove(i);
+                            players.add(i, value);
+                        }
+                    }
+                    System.out.println("Player left?");
+                }
+
+                @Override
+                public void onTurn(Turn value) {
+                    for (Player player : players) {
+                        if (player.getUser().getUsername().equals(value.getUser().getUsername())) {
+                            player.getSnake().turn(value.getCurve().getDirection(), value.getCurve().getDate());
+                        }
+                    }
+                    System.out.println("Player changed direction?");
+                }
+            });
         } catch (RemoteException | NotBoundException ignored) {
             //Ignore
         }
@@ -51,25 +87,19 @@ public class Controller implements Initializable {
         context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        if (snakes != null) {
-            for (Snake snake : snakes) {
-                snake.draw(canvas.getGraphicsContext2D());
+        if (players != null) {
+            for (Player player : players) {
+                player.getSnake().draw(canvas.getGraphicsContext2D());
             }
         }
     }
 
     @FXML
-    public void onKeyPressed(KeyEvent event) throws RemoteException {
+    void onKeyPressed(KeyEvent event) throws RemoteException {
         Direction direction;
         switch (event.getCode()) {
-            case UP:
-                direction = Direction.UP;
-                break;
             case LEFT:
                 direction = Direction.LEFT;
-                break;
-            case DOWN:
-                direction = Direction.DOWN;
                 break;
             case RIGHT:
                 direction = Direction.RIGHT;
@@ -79,6 +109,16 @@ public class Controller implements Initializable {
                 return;
         }
         event.consume();
-        service.turn(gameId, sessionId, direction);
+        gameService.turn(gameToken, userToken, direction);
+        System.out.println("Left/Right?");
+    }
+
+    @FXML
+    void onKeyReleased(KeyEvent event) throws RemoteException {
+        if (event.getCode() == KeyCode.LEFT || event.getCode() == KeyCode.RIGHT) {
+            event.consume();
+            gameService.turn(gameToken, userToken, Direction.FORWARD);
+            System.out.println("KeyUp?");
+        }
     }
 }

@@ -1,8 +1,7 @@
 package com.seapip.thomas.curvermi.shared;
 
 public enum Direction {
-    UP,
+    FORWARD,
     LEFT,
-    DOWN,
     RIGHT
 }
