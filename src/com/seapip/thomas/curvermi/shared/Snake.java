@@ -61,35 +61,47 @@ public class Snake implements Serializable {
         Point position = start;
         context.setStroke(Color.hsb(hue, 1, 1));
         context.setLineWidth(4);
+        context.beginPath();
+        context.moveTo(position.getX(), position.getY());
         for (int i = 1; i < curves.size(); i++) {
             long time = curves.get(i).getDate().getTime() - curves.get(i - 1).getDate().getTime();
             Direction direction = curves.get(i - 1).getDirection();
-            if(direction != Direction.FORWARD) {
-                rotation += time * SPEED * (curves.get(i - 1).getDirection() == Direction.LEFT ? -1 : 1);
+            if (direction != Direction.FORWARD) {
+                rotation += time * SPEED / 100 * (direction == Direction.LEFT ? -1 : 1);
             }
-            Point destination = new Point(
-                    position.getX() + Math.sin(rotation) * time * SPEED,
-                    position.getY() - Math.cos(rotation) * time * SPEED);
-            if(direction == Direction.FORWARD) {
-                context.strokeLine(position.getX(), position.getY(), destination.getX(), destination.getY());
+            Point destination;
+            if (direction == Direction.FORWARD) {
+                destination = new Point(
+                        position.getX() + Math.sin(rotation) * time * SPEED,
+                        position.getY() - Math.cos(rotation) * time * SPEED);
+                context.lineTo(destination.getX(), destination.getY());
             } else {
-                context.arcTo(position.getX(), position.getY(), destination.getX(), destination.getY(), RADIUS);
+                destination = new Point(
+                        position.getX() + Math.sin(rotation) * RADIUS,
+                        position.getY() - Math.cos(rotation) * RADIUS);
+                context.arc(position.getX(), position.getY(), RADIUS, RADIUS, rotation / Math.PI * 180 - 90, time * SPEED);
+                //context.arcTo(position.getX(), position.getY(), destination.getX(), destination.getY(), RADIUS);
             }
             position = destination;
         }
         long time = (lost == 0 ? new Date().getTime() : lost) - curves.get(curves.size() - 1).getDate().getTime();
         Direction direction = curves.get(curves.size() - 1).getDirection();
-        if(direction != Direction.FORWARD) {
-            rotation += time * SPEED * (curves.get(curves.size() - 1).getDirection() == Direction.LEFT ? -1 : 1);
+        if (direction != Direction.FORWARD) {
+            rotation += time * SPEED / 50 * (direction == Direction.LEFT ? -1 : 1);
         }
-        Point destination = new Point(
-                position.getX() + Math.sin(rotation) * time * SPEED,
-                position.getY() - Math.cos(rotation) * time * SPEED);
-        if(direction == Direction.FORWARD) {
-            context.strokeLine(position.getX(), position.getY(), destination.getX(), destination.getY());
+        Point destination;
+        if (direction == Direction.FORWARD) {
+            destination = new Point(
+                    position.getX() + Math.sin(rotation) * time * SPEED,
+                    position.getY() - Math.cos(rotation) * time * SPEED);
+            context.lineTo(destination.getX(), destination.getY());
         } else {
-            context.arcTo(position.getX(), position.getY(), destination.getX(), destination.getY(), RADIUS);
+            destination = new Point(
+                    position.getX() + Math.sin(rotation) * RADIUS,
+                    position.getY() - Math.cos(rotation) * RADIUS);
+            context.arc(position.getX(), position.getY(), RADIUS, RADIUS, rotation / Math.PI * 180 - 90, time * SPEED);
         }
+        context.stroke();
     }
 
     /*

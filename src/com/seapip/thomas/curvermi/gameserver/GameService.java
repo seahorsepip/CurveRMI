@@ -22,6 +22,7 @@ class GameService {
         publisher.registerProperty("player");
         publisher.registerProperty("turn");
         LocateRegistry.getRegistry(1099).rebind(token, publisher);
+        System.out.println("Created");
     }
 
     void start() {
@@ -44,12 +45,14 @@ class GameService {
 
     void connect(String userToken) throws RemoteException {
         if (!started) {
-            User user = userPublisher.get(userToken);
+            //User user = userPublisher.get(userToken);
+            User user = new User("seahorsepip");
             if (user != null) {
                 players.put(userToken, new Player(user, new Snake(new Point(
                         ThreadLocalRandom.current().nextInt(width / 4, width / 4 * 3),
                         ThreadLocalRandom.current().nextInt(height / 4, height / 4 * 3)
                 ))));
+                System.out.println("Connected " + user.getUsername());
             }
         }
     }
@@ -61,7 +64,7 @@ class GameService {
     }
 
     void turn(String userToken, Direction direction) throws RemoteException {
-        if (started && players.containsKey(userToken)) {
+        if (started ){//&& players.containsKey(userToken)) {
             Player player = players.get(userToken);
             Turn turn = new Turn(player.getUser(), player.getSnake().turn(direction));
             publisher.inform("turn", null, turn);

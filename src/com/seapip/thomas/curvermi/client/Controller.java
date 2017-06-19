@@ -26,6 +26,7 @@ public class Controller implements Initializable {
     private String userToken;
     private String gameToken;
     private List<Player> players;
+    private boolean keyDown;
     @FXML
     private Canvas canvas;
 
@@ -33,16 +34,19 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+            /*
             userService = (IUserService) registry.lookup("UserPublisher");
-            lobbyService = (ILobbyService) registry.lookup("LobbyPublisher");
+            lobbyService = (ILobbyService) registry.lookup("LobbyPublisher");*/
             gameService = (IGameService) registry.lookup("GamePublisher");
             System.out.println(userService);
             System.out.println(lobbyService);
             System.out.println(gameService);
-            userToken = userService.login("seahorsepip", "12345");
+            //userToken = userService.login("seahorsepip", "12345");
+            userToken = "4rcgreqgseg";
             gameToken = gameService.create(userToken);
             gameService.connect(gameToken, userToken);
             gameService.start(gameToken);
+            gameService.turn(gameToken, userToken, Direction.RIGHT);
             new GameServiceListener(gameToken, new GameServiceListener.Callback() {
                 @Override
                 public void onPlayers(List<Player> values) {
@@ -96,21 +100,23 @@ public class Controller implements Initializable {
 
     @FXML
     void onKeyPressed(KeyEvent event) throws RemoteException {
-        Direction direction;
-        switch (event.getCode()) {
-            case LEFT:
-                direction = Direction.LEFT;
-                break;
-            case RIGHT:
-                direction = Direction.RIGHT;
-                break;
-            default:
-                //Ignore event
-                return;
+        if (!keyDown) {
+            Direction direction;
+            switch (event.getCode()) {
+                case LEFT:
+                    direction = Direction.LEFT;
+                    break;
+                case RIGHT:
+                    direction = Direction.RIGHT;
+                    break;
+                default:
+                    //Ignore event
+                    return;
+            }
+            keyDown = true;
+            gameService.turn(gameToken, userToken, direction);
+            System.out.println("Left/Right?");
         }
-        event.consume();
-        gameService.turn(gameToken, userToken, direction);
-        System.out.println("Left/Right?");
     }
 
     @FXML
@@ -118,6 +124,7 @@ public class Controller implements Initializable {
         if (event.getCode() == KeyCode.LEFT || event.getCode() == KeyCode.RIGHT) {
             event.consume();
             gameService.turn(gameToken, userToken, Direction.FORWARD);
+            keyDown = false;
             System.out.println("KeyUp?");
         }
     }

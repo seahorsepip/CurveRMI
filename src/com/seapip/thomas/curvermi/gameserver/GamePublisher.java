@@ -22,13 +22,16 @@ public class GamePublisher extends UnicastRemoteObject implements IGameService {
 
     @Override
     public String create(String userToken) throws RemoteException, NotBoundException {
-        if (userPublisher.get(userToken) != null) {
+        System.out.println("uhh no!");
+        //if (userPublisher.get(userToken) != null) {
+            System.out.println("Welcome!");
             String token = new BigInteger(130, random).toString(32);
             GameService gameService = new GameService(token);
             games.put(token, gameService);
             return token;
-        }
-        return null;
+
+        //}
+        //return null;
     }
 
     @Override
@@ -40,21 +43,21 @@ public class GamePublisher extends UnicastRemoteObject implements IGameService {
 
     @Override
     public void connect(String gameToken, String userToken) throws RemoteException {
-        if (games.containsKey(gameToken) && userPublisher.get(userToken) != null) {
+        if (games.containsKey(gameToken) ){//&& userPublisher.get(userToken) != null) {
             games.get(gameToken).connect(userToken);
         }
     }
 
     @Override
     public void disconnect(String gameToken, String userToken) throws RemoteException {
-        if (games.containsKey(gameToken) && userPublisher.get(userToken) != null) {
+        if (games.containsKey(gameToken) ){//&& userPublisher.get(userToken) != null) {
             games.get(gameToken).disconnect(userToken);
         }
     }
 
     @Override
     public void turn(String gameToken, String userToken, Direction direction) throws RemoteException {
-        if (games.containsKey(gameToken) && userPublisher.get(userToken) != null) {
+        if (games.containsKey(gameToken) ){//&& userPublisher.get(userToken) != null) {
             games.get(gameToken).turn(userToken, direction);
         }
     }
