@@ -26,8 +26,16 @@ public class GameService extends UnicastRemoteObject implements IGameService {
             Game game = new Game(token);
             games.put(token, game);
             return token;
+
         }
         return null;
+    }
+
+    @Override
+    public void start(String gameToken) throws RemoteException {
+        if(games.containsKey(gameToken)) {
+            games.get(gameToken).start();
+        }
     }
 
     @Override

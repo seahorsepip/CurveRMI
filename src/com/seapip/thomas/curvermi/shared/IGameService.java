@@ -8,6 +8,8 @@ public interface IGameService extends Remote {
 
     String create(String userToken) throws RemoteException, NotBoundException;
 
+    void start(String gameToken) throws RemoteException;
+
     void connect(String gameToken, String userToken) throws RemoteException;
 
     void disconnect(String gameToken, String userToken) throws RemoteException;
