@@ -7,7 +7,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public interface ILobbyService extends Remote {
+public interface ILobbyPublisher extends Remote {
     List<Lobby> get() throws RemoteException;
 
     String create(String userToken, String name, String password) throws RemoteException, NotBoundException, NotLoggedInException;

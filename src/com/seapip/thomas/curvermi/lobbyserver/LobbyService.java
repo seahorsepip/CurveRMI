@@ -19,21 +19,21 @@ public class LobbyService {
     private User host;
     private HashMap<String, User> users = new HashMap<>();
     private RemotePublisher publisher = new RemotePublisher();
-    private IUserService userService;
-    private IGameService gameService;
+    private IUserPublisher userService;
+    private IGamePublisher gameService;
 
     LobbyService(String token, String userToken, String name, String password)
             throws RemoteException, NotBoundException, NotLoggedInException {
         this.token = token;
         this.name = name;
         this.password = password;
-        Registry registry = LocateRegistry.getRegistry(1099);
+        Registry registry = LocateRegistry.getRegistry();
         publisher.registerProperty("host");
         publisher.registerProperty("users");
         publisher.registerProperty("gameToken");
         registry.rebind(token, publisher);
-        userService = (IUserService) registry.lookup("UserService");
-        gameService = (IGameService) registry.lookup("GameService");
+        userService = (IUserPublisher) registry.lookup("UserService");
+        gameService = (IGamePublisher) registry.lookup("GameService");
         this.host = userService.get(userToken);
         if (this.host == null) {
             destroy();

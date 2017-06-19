@@ -1,6 +1,6 @@
 package com.seapip.thomas.curvermi.lobbyserver;
 
-import com.seapip.thomas.curvermi.shared.ILobbyService;
+import com.seapip.thomas.curvermi.shared.ILobbyPublisher;
 import com.seapip.thomas.curvermi.shared.Lobby;
 import com.seapip.thomas.curvermi.shared.NotLoggedInException;
 
@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.seapip.thomas.curvermi.lobbyserver.Main.lobbies;
 
-public class LobbyPublisher extends UnicastRemoteObject implements ILobbyService {
+public class LobbyPublisher extends UnicastRemoteObject implements ILobbyPublisher {
 
     private SecureRandom random = new SecureRandom();
 

@@ -3,7 +3,7 @@ package com.seapip.thomas.curvermi.shared;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public interface IUserService extends Remote {
+public interface IUserPublisher extends Remote {
 
     String login(String username, String password) throws RemoteException;
 

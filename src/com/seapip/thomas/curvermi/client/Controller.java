@@ -20,9 +20,8 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
-    private IUserService userService;
-    private ILobbyService lobbyService;
-    private IGameService gameService;
+    private IUserPublisher userPublisher;
+    private IGamePublisher gamepublisher;
     private String userToken;
     private String gameToken;
     private List<Player> players;
@@ -33,25 +32,18 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-            /*
-            userService = (IUserService) registry.lookup("UserPublisher");
-            lobbyService = (ILobbyService) registry.lookup("LobbyPublisher");*/
-            gameService = (IGameService) registry.lookup("GamePublisher");
-            System.out.println(userService);
-            System.out.println(lobbyService);
-            System.out.println(gameService);
-            //userToken = userService.login("seahorsepip", "12345");
-            userToken = "4rcgreqgseg";
-            gameToken = gameService.create(userToken);
-            gameService.connect(gameToken, userToken);
-            gameService.start(gameToken);
-            gameService.turn(gameToken, userToken, Direction.RIGHT);
-            new GameServiceListener(gameToken, new GameServiceListener.Callback() {
+            Registry registry = LocateRegistry.getRegistry();
+            userPublisher = (IUserPublisher) registry.lookup("UserPublisher");
+            //lobbyService = (ILobbyService) registry.lookup("LobbyPublisher");
+            gamepublisher = (IGamePublisher) registry.lookup("GamePublisher");
+            userToken = userPublisher.login("seahorsepip", "12345");
+            gameToken = gamepublisher.create(userToken);
+            gamepublisher.connect(gameToken, userToken);
+            gamepublisher.start(gameToken);
+            new GameListener(gameToken, new GameListener.Callback() {
                 @Override
                 public void onPlayers(List<Player> values) {
                     players = values;
-                    System.out.println("New players :D");
                 }
 
                 @Override
@@ -63,7 +55,6 @@ public class Controller implements Initializable {
                             players.add(i, value);
                         }
                     }
-                    System.out.println("Player left?");
                 }
 
                 @Override
@@ -73,7 +64,6 @@ public class Controller implements Initializable {
                             player.getSnake().turn(value.getCurve().getDirection(), value.getCurve().getDate());
                         }
                     }
-                    System.out.println("Player changed direction?");
                 }
             });
         } catch (RemoteException | NotBoundException ignored) {
@@ -114,8 +104,7 @@ public class Controller implements Initializable {
                     return;
             }
             keyDown = true;
-            gameService.turn(gameToken, userToken, direction);
-            System.out.println("Left/Right?");
+            gamepublisher.turn(gameToken, userToken, direction);
         }
     }
 
@@ -123,9 +112,8 @@ public class Controller implements Initializable {
     void onKeyReleased(KeyEvent event) throws RemoteException {
         if (event.getCode() == KeyCode.LEFT || event.getCode() == KeyCode.RIGHT) {
             event.consume();
-            gameService.turn(gameToken, userToken, Direction.FORWARD);
+            gamepublisher.turn(gameToken, userToken, Direction.FORWARD);
             keyDown = false;
-            System.out.println("KeyUp?");
         }
     }
 }

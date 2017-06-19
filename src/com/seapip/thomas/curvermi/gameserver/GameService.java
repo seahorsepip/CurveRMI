@@ -45,8 +45,7 @@ class GameService {
 
     void connect(String userToken) throws RemoteException {
         if (!started) {
-            //User user = userPublisher.get(userToken);
-            User user = new User("seahorsepip");
+            User user = userPublisher.get(userToken);
             if (user != null) {
                 players.put(userToken, new Player(user, new Snake(new Point(
                         ThreadLocalRandom.current().nextInt(width / 4, width / 4 * 3),
@@ -64,7 +63,7 @@ class GameService {
     }
 
     void turn(String userToken, Direction direction) throws RemoteException {
-        if (started ){//&& players.containsKey(userToken)) {
+        if (started && userPublisher.get(userToken) != null) {
             Player player = players.get(userToken);
             Turn turn = new Turn(player.getUser(), player.getSnake().turn(direction));
             publisher.inform("turn", null, turn);

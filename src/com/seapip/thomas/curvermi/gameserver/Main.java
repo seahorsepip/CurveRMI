@@ -16,7 +16,7 @@ public class Main {
     public static void main(String[] args) throws RemoteException {
         Registry registry = LocateRegistry.createRegistry(1099);
         registry.rebind("GamePublisher", new GamePublisher());
-        //userPublisher = new UserPublisher();
-        //registry.rebind("UserPublisher", userPublisher);
+        userPublisher = new UserPublisher();
+        registry.rebind("UserPublisher", userPublisher);
     }
 }

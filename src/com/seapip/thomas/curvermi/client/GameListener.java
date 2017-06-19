@@ -13,13 +13,13 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class GameServiceListener extends UnicastRemoteObject implements IRemotePropertyListener {
+public class GameListener extends UnicastRemoteObject implements IRemotePropertyListener {
 
     private transient Callback callback;
 
-    protected GameServiceListener(String id, Callback callback) throws RemoteException, NotBoundException {
+    protected GameListener(String id, Callback callback) throws RemoteException, NotBoundException {
         this.callback = callback;
-        Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+        Registry registry = LocateRegistry.getRegistry();
         IRemotePublisherForListener publisher = (IRemotePublisherForListener) registry.lookup(id);
         publisher.subscribeRemoteListener(this, "players");
         publisher.subscribeRemoteListener(this, "player");

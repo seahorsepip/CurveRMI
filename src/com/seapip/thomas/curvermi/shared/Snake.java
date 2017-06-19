@@ -6,7 +6,6 @@ import javafx.scene.paint.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Snake implements Serializable {
@@ -60,20 +59,15 @@ public class Snake implements Serializable {
                 context.lineTo(destination.getX(), destination.getY());
             } else {
                 double rotate = time * SPEED / RADIUS * (direction == Direction.LEFT ? -1 : 1);
+                int multiplier = (direction == Direction.RIGHT ? -1 : 1);
                 destination = new Point(
-                        position.getX()
-                                - Math.sin(rotation + Math.PI / 2 * (direction == Direction.RIGHT ? -1 : 1)) * RADIUS
-                                + Math.sin(rotation + rotate + Math.PI / 2 * (direction == Direction.RIGHT ? -1 : 1))
-                                * RADIUS,
-                        position.getY()
-                                + Math.cos(rotation + Math.PI / 2 * (direction == Direction.RIGHT ? -1 : 1)) * RADIUS
-                                - Math.cos(rotation + rotate + Math.PI / 2 * (direction == Direction.RIGHT ? -1 : 1))
-                                * RADIUS);
+                        position.getX() - Math.sin(rotation + Math.PI / 2 * multiplier) * RADIUS
+                                + Math.sin(rotation + rotate + Math.PI / 2 * multiplier) * RADIUS,
+                        position.getY() + Math.cos(rotation + Math.PI / 2 * multiplier) * RADIUS
+                                - Math.cos(rotation + rotate + Math.PI / 2 * multiplier) * RADIUS);
                 context.arc(
-                        position.getX()
-                                - Math.sin(rotation + Math.PI / 2 * (direction == Direction.RIGHT ? -1 : 1)) * RADIUS,
-                        position.getY()
-                                + Math.cos(rotation + Math.PI / 2 * (direction == Direction.RIGHT ? -1 : 1)) * RADIUS,
+                        position.getX() - Math.sin(rotation + Math.PI / 2 * multiplier) * RADIUS,
+                        position.getY() + Math.cos(rotation + Math.PI / 2 * multiplier) * RADIUS,
                         RADIUS, RADIUS, -rotation / Math.PI * 180 + (direction == Direction.RIGHT ? 180 : 0),
                         -rotate / Math.PI * 180);
                 rotation += rotate;

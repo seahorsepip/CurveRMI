@@ -4,7 +4,7 @@ import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public interface IGameService extends Remote {
+public interface IGamePublisher extends Remote {
 
     String create(String userToken) throws RemoteException, NotBoundException;
 

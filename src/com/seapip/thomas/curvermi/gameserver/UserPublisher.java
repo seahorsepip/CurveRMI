@@ -1,18 +1,16 @@
 package com.seapip.thomas.curvermi.gameserver;
 
-import com.seapip.thomas.curvermi.shared.IGameService;
-import com.seapip.thomas.curvermi.shared.IUserService;
+import com.seapip.thomas.curvermi.shared.IUserPublisher;
 import com.seapip.thomas.curvermi.shared.User;
 
 import java.math.BigInteger;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.SecureRandom;
 
 import static com.seapip.thomas.curvermi.gameserver.Main.users;
 
-public class UserPublisher extends UnicastRemoteObject implements IUserService {
+public class UserPublisher extends UnicastRemoteObject implements IUserPublisher {
 
     private SecureRandom random = new SecureRandom();
 
