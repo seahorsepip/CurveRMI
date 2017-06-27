@@ -1,7 +1,5 @@
 package com.seapip.thomas.curvermi.shared;
 
-import com.seapip.thomas.curvermi.lobbyserver.LobbyService;
-
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -18,5 +16,5 @@ public interface ILobbyPublisher extends Remote {
 
     void start(String lobbyToken, String userToken) throws RemoteException, NotBoundException;
 
-    void kick(String lobbyToken, String userToken, String username) throws RemoteException;
+    void kick(String lobbyToken, String userToken, int userId) throws RemoteException;
 }

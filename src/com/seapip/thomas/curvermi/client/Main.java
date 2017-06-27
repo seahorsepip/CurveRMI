@@ -17,7 +17,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("CurveRMI");
         primaryStage.setScene(new Scene(loader.load(getClass().getResource("curvermi.fxml").openStream()),
                 400, 400));
         primaryStage.show();

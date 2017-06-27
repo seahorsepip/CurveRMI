@@ -21,9 +21,7 @@ public class GamePublisher extends UnicastRemoteObject implements IGamePublisher
 
     @Override
     public String create(String userToken) throws RemoteException, NotBoundException {
-        System.out.println("uhh no!");
         if (userPublisher.get(userToken) != null) {
-            System.out.println("Welcome!");
             String token = new BigInteger(130, random).toString(32);
             GameService gameService = new GameService(token);
             games.put(token, gameService);

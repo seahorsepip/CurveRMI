@@ -67,10 +67,10 @@ public class Publisher {
         // Ensure that hash map is synchronized
         propertyListeners = Collections.synchronizedMap(new HashMap<>());
 
-        // Register null-String as property
+        // register null-String as property
         propertyListeners.put(null, Collections.synchronizedList(new ArrayList<>()));
 
-        // Register remaining properties
+        // register remaining properties
         for (String s : properties) {
             propertyListeners.put(s, Collections.synchronizedList(new ArrayList<>()));
         }
@@ -226,7 +226,7 @@ public class Publisher {
     }
 
     /**
-     * Register property. Register property at this publisher. From now on
+     * register property. register property at this publisher. From now on
      * listeners can subscribe to this property. Nothing changes in case given
      * property was already registered.
      *

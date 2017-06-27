@@ -34,7 +34,9 @@ public class LobbyPublisher extends UnicastRemoteObject implements ILobbyPublish
     public String create(String userToken, String name, String password) throws RemoteException, NotBoundException, NotLoggedInException {
         String token = new BigInteger(130, random).toString(32);
         LobbyService lobbyService = new LobbyService(token, userToken, name, password);
+        lobbyService.join(userToken, password);
         lobbies.put(token, lobbyService);
+        System.out.println("Lobby created: " + name);
         return token;
     }
 
@@ -55,14 +57,15 @@ public class LobbyPublisher extends UnicastRemoteObject implements ILobbyPublish
     @Override
     public void start(String lobbyToken, String userToken) throws RemoteException, NotBoundException {
         if (lobbies.containsKey(lobbyToken)) {
-            lobbies.get(lobbyToken).leave(userToken);
+            System.out.println("Lobby started!");
+            lobbies.get(lobbyToken).start(userToken);
         }
     }
 
     @Override
-    public void kick(String lobbyToken, String userToken, String username) throws RemoteException {
+    public void kick(String lobbyToken, String userToken, int userId) throws RemoteException {
         if (lobbies.containsKey(lobbyToken)) {
-            lobbies.get(lobbyToken).kick(userToken, username);
+            lobbies.get(lobbyToken).kick(userToken, userId);
         }
     }
 }

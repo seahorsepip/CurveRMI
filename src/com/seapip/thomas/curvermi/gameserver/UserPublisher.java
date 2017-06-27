@@ -19,7 +19,7 @@ public class UserPublisher extends UnicastRemoteObject implements IUserPublisher
 
     public String login(String username, String password) {
         String token = new BigInteger(130, random).toString(32);
-        users.put(token, new User(username));
+        users.put(token, 5);
         return token;
     }
 
@@ -27,13 +27,13 @@ public class UserPublisher extends UnicastRemoteObject implements IUserPublisher
         users.remove(token);
     }
 
-    public void Register(String username, String password) {
+    public void register(String username, String password) {
 
     }
 
     public User get(String token) {
         if (users.containsKey(token)) {
-            return users.get(token);
+            return new User(users.get(token), "Seahorsepip");
         }
         return null;
     }

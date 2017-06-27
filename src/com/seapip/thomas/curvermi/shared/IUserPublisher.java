@@ -9,7 +9,7 @@ public interface IUserPublisher extends Remote {
 
     void logout(String token) throws RemoteException;
 
-    void Register(String username, String password) throws RemoteException;
+    void register(String username, String password) throws RemoteException;
 
     User get(String token) throws RemoteException;
 }

@@ -19,8 +19,8 @@ public class LobbyService {
     private User host;
     private HashMap<String, User> users = new HashMap<>();
     private RemotePublisher publisher = new RemotePublisher();
-    private IUserPublisher userService;
-    private IGamePublisher gameService;
+    private IUserPublisher userPublisher;
+    private IGamePublisher gamePublisher;
 
     LobbyService(String token, String userToken, String name, String password)
             throws RemoteException, NotBoundException, NotLoggedInException {
@@ -32,9 +32,9 @@ public class LobbyService {
         publisher.registerProperty("users");
         publisher.registerProperty("gameToken");
         registry.rebind(token, publisher);
-        userService = (IUserPublisher) registry.lookup("UserService");
-        gameService = (IGamePublisher) registry.lookup("GameService");
-        this.host = userService.get(userToken);
+        userPublisher = (IUserPublisher) registry.lookup("UserPublisher");
+        gamePublisher = (IGamePublisher) registry.lookup("GamePublisher");
+        this.host = userPublisher.get(userToken);
         if (this.host == null) {
             destroy();
             throw new NotLoggedInException();
@@ -46,8 +46,8 @@ public class LobbyService {
     }
 
     void join(String userToken, String password) throws RemoteException {
-        if (validatePassword(password)) {
-            User user = userService.get(userToken);
+        if (validatePassword(password) && !users.containsKey(userToken) && !isHost(userToken)) {
+            User user = userPublisher.get(userToken);
             if (user != null) {
                 users.put(userToken, user);
                 publisher.inform("users", null, new ArrayList<>(users.values()));
@@ -74,15 +74,17 @@ public class LobbyService {
 
     void start(String userToken) throws RemoteException, NotBoundException {
         if (isHost(userToken)) {
-            publisher.inform("gameToken", null, gameService.create(userToken));
+            System.out.println("Alive???");
+            String gameToken = gamePublisher.create(userToken);
+            publisher.inform("gameToken", null, gameToken);
+            gamePublisher.start(gameToken);
         }
     }
 
-    void kick(String userToken, String username) throws RemoteException {
+    void kick(String userToken, int userId) throws RemoteException {
         if (isHost(userToken)) {
-            String[] keys = (String[]) users.keySet().toArray();
-            for (String key : keys) {
-                if (users.get(key).getUsername().equals(username)) {
+            for (Object key : users.keySet().toArray()) {
+                if (users.get(key).getId() == userId) {
                     users.remove(key);
                     break;
                 }
@@ -92,7 +94,7 @@ public class LobbyService {
     }
 
     private boolean isHost(String userToken) throws RemoteException {
-        User user = userService.get(userToken);
+        User user = userPublisher.get(userToken);
         return user != null && user.getUsername().equals(host.getUsername());
     }
 

@@ -13,6 +13,7 @@ public class Lobby implements Serializable {
     public Lobby(String token, String name, boolean password, User host, List<User> users) {
         this.token = token;
         this.name = name;
+        this.password = password;
         this.host = host;
         this.users = users;
     }
@@ -35,5 +36,10 @@ public class Lobby implements Serializable {
 
     public boolean hasPassword() {
         return password;
+    }
+
+    @Override
+    public String toString() {
+        return name + "         users: " + (users.size() + 1) + "         password: " + password;
     }
 }

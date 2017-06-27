@@ -1,11 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.layout.GridPane?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="center" minHeight="400.0" minWidth="400.0"
-          xmlns="http://javafx.com/javafx/8"
-          fx:controller="com.seapip.thomas.curvermi.client.Controller">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" id="game" alignment="center" minHeight="400.0" minWidth="400.0"
+          xmlns="http://javafx.com/javafx/8" fx:controller="com.seapip.thomas.curvermi.client.Controller">
     <children>
-        <Canvas height="400.0" fx:id="canvas" width="400.0"/>
+        <Pane fx:id="gamePane" prefHeight="400.0" prefWidth="400.0" visible="false">
+            <children>
+                <Canvas fx:id="canvas" height="400.0" width="400.0"/>
+            </children>
+        </Pane>
+        <AnchorPane fx:id="loginPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+            <children>
+                <Label layoutX="20.0" layoutY="35.0" text="Login" AnchorPane.leftAnchor="20.0"
+                       AnchorPane.topAnchor="20.0">
+                    <font>
+                        <Font size="40.0"/>
+                    </font>
+                </Label>
+                <TextField fx:id="usernameField" layoutX="20.0" layoutY="133.0" promptText="Username"
+                           AnchorPane.bottomAnchor="216.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0"/>
+                <Button layoutX="14.0" layoutY="319.0" mnemonicParsing="false" onAction="#onLoginRegister"
+                        text="Login/Register" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0"/>
+                <Label layoutX="20.0" layoutY="98.0" text="Username"/>
+                <Label layoutX="24.0" layoutY="209.0" text="Password"/>
+                <PasswordField fx:id="passwordField" layoutX="14.0" layoutY="244.0" promptText="Password"
+                               AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0"/>
+            </children>
+        </AnchorPane>
+        <AnchorPane fx:id="lobbiesPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+            <children>
+                <Label layoutX="20.0" layoutY="35.0" text="Lobbies" AnchorPane.leftAnchor="20.0"
+                       AnchorPane.topAnchor="20.0">
+                    <font>
+                        <Font size="40.0"/>
+                    </font>
+                </Label>
+                <ListView fx:id="lobbiesList" layoutX="20.0" layoutY="87.0" prefHeight="293.0" prefWidth="200.0"
+                          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                          AnchorPane.topAnchor="87.0"/>
+                <Button layoutX="276.0" layoutY="24.0" mnemonicParsing="false" onAction="#onRefreshLobbies"
+                        text="Refresh" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0"/>
+                <Button layoutX="179.0" layoutY="20.0" mnemonicParsing="false" onAction="#onAddLobbyScreen" text="Add"
+                        AnchorPane.rightAnchor="145.0"/>
+            </children>
+        </AnchorPane>
+        <AnchorPane fx:id="addLobbyPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+            <children>
+                <Label layoutX="20.0" layoutY="20.0" text="Add lobby" AnchorPane.leftAnchor="20.0"
+                       AnchorPane.topAnchor="20.0">
+                    <font>
+                        <Font size="40.0"/>
+                    </font>
+                </Label>
+                <TextField fx:id="lobbyNameField" layoutX="20.0" layoutY="133.0" promptText="Name"
+                           AnchorPane.bottomAnchor="216.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0"/>
+                <Button fx:id="createLobbyButton" layoutX="20.0" layoutY="329.0" mnemonicParsing="false"
+                        onAction="#onAddLobby" text="Create" AnchorPane.bottomAnchor="20.0"
+                        AnchorPane.leftAnchor="20.0"/>
+                <Label layoutX="20.0" layoutY="98.0" text="Name"/>
+                <Label layoutX="24.0" layoutY="209.0" text="Password"/>
+                <PasswordField fx:id="lobbyPasswordField" layoutX="20.0" layoutY="244.0" promptText="No password"
+                               AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0"/>
+            </children>
+        </AnchorPane>
+        <AnchorPane fx:id="lobbyPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+            <children>
+                <Label layoutX="20.0" layoutY="35.0" text="Lobby" AnchorPane.leftAnchor="20.0"
+                       AnchorPane.topAnchor="20.0">
+                    <font>
+                        <Font size="40.0"/>
+                    </font>
+                </Label>
+                <ListView layoutX="20.0" layoutY="87.0" prefHeight="293.0" prefWidth="200.0"
+                          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                          AnchorPane.topAnchor="87.0"/>
+                <Button layoutX="276.0" layoutY="24.0" mnemonicParsing="false" onAction="#onStartLobby" text="Start"
+                        AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0"/>
+                <Button layoutX="205.0" layoutY="20.0" mnemonicParsing="false" onAction="#onLeaveLobby" text="Leave"
+                        AnchorPane.rightAnchor="102.0"/>
+                <Button layoutX="130.0" layoutY="20.0" mnemonicParsing="false" onAction="#onKickLobby"
+                        text="Kick"/>
+            </children>
+        </AnchorPane>
     </children>
+    <columnConstraints>
+        <ColumnConstraints/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints/>
+    </rowConstraints>
 </GridPane>

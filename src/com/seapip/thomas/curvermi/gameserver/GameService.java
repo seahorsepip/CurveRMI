@@ -21,15 +21,17 @@ class GameService {
         publisher.registerProperty("players");
         publisher.registerProperty("player");
         publisher.registerProperty("turn");
-        LocateRegistry.getRegistry(1099).rebind(token, publisher);
+        LocateRegistry.getRegistry().rebind(token, publisher);
         System.out.println("Created");
     }
 
     void start() {
+        System.out.println("Started!");
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 try {
+                    System.out.println("Actually started!");
                     started = true;
                     Date date = new Date();
                     for (Player player : players.values()) {
@@ -51,7 +53,6 @@ class GameService {
                         ThreadLocalRandom.current().nextInt(width / 4, width / 4 * 3),
                         ThreadLocalRandom.current().nextInt(height / 4, height / 4 * 3)
                 ))));
-                System.out.println("Connected " + user.getUsername());
             }
         }
     }

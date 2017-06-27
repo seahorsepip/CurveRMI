@@ -9,11 +9,11 @@ import java.util.HashMap;
 
 public class Main {
     static final HashMap<String, GameService> games = new HashMap<>();
-    static final HashMap<String, User> users = new HashMap<>();
+    static final HashMap<String, Integer> users = new HashMap<>();
 
     static UserPublisher userPublisher;
 
-    public static void main(String[] args) throws RemoteException {
+    public static void main(String[]  args) throws RemoteException {
         Registry registry = LocateRegistry.createRegistry(1099);
         registry.rebind("GamePublisher", new GamePublisher());
         userPublisher = new UserPublisher();
