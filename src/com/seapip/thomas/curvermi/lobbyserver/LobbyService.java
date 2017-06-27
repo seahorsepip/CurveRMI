@@ -74,7 +74,6 @@ public class LobbyService {
 
     void start(String userToken) throws RemoteException, NotBoundException {
         if (isHost(userToken)) {
-            System.out.println("Alive???");
             String gameToken = gamePublisher.create(userToken);
             publisher.inform("gameToken", null, gameToken);
             gamePublisher.start(gameToken);
@@ -95,7 +94,7 @@ public class LobbyService {
 
     private boolean isHost(String userToken) throws RemoteException {
         User user = userPublisher.get(userToken);
-        return user != null && user.getUsername().equals(host.getUsername());
+        return user != null && user.getId() == host.getId();
     }
 
     private boolean hasPassword() {

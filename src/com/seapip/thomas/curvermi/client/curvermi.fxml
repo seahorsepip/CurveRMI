@@ -38,7 +38,7 @@
                         <Font size="40.0"/>
                     </font>
                 </Label>
-                <ListView fx:id="lobbiesList" layoutX="20.0" layoutY="87.0" prefHeight="293.0" prefWidth="200.0"
+                <ListView fx:id="lobbiesList" onMouseClicked="#onLobbyListClick" layoutX="20.0" layoutY="87.0" prefHeight="293.0" prefWidth="200.0"
                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                           AnchorPane.topAnchor="87.0"/>
                 <Button layoutX="276.0" layoutY="24.0" mnemonicParsing="false" onAction="#onRefreshLobbies"
@@ -57,9 +57,8 @@
                 </Label>
                 <TextField fx:id="lobbyNameField" layoutX="20.0" layoutY="133.0" promptText="Name"
                            AnchorPane.bottomAnchor="216.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0"/>
-                <Button fx:id="createLobbyButton" layoutX="20.0" layoutY="329.0" mnemonicParsing="false"
-                        onAction="#onAddLobby" text="Create" AnchorPane.bottomAnchor="20.0"
-                        AnchorPane.leftAnchor="20.0"/>
+                <Button layoutX="20.0" layoutY="329.0" mnemonicParsing="false" onAction="#onAddLobby" text="Create"
+                        AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0"/>
                 <Label layoutX="20.0" layoutY="98.0" text="Name"/>
                 <Label layoutX="24.0" layoutY="209.0" text="Password"/>
                 <PasswordField fx:id="lobbyPasswordField" layoutX="20.0" layoutY="244.0" promptText="No password"
@@ -74,15 +73,14 @@
                         <Font size="40.0"/>
                     </font>
                 </Label>
-                <ListView layoutX="20.0" layoutY="87.0" prefHeight="293.0" prefWidth="200.0"
-                          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                          AnchorPane.topAnchor="87.0"/>
+                <ListView fx:id="userList" layoutX="20.0" layoutY="87.0" onMouseClicked="#onLobbyUserListClick"
+                          prefHeight="293.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="87.0"/>
                 <Button layoutX="276.0" layoutY="24.0" mnemonicParsing="false" onAction="#onStartLobby" text="Start"
                         AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0"/>
                 <Button layoutX="205.0" layoutY="20.0" mnemonicParsing="false" onAction="#onLeaveLobby" text="Leave"
                         AnchorPane.rightAnchor="102.0"/>
-                <Button layoutX="130.0" layoutY="20.0" mnemonicParsing="false" onAction="#onKickLobby"
-                        text="Kick"/>
+                <Button layoutX="130.0" layoutY="20.0" mnemonicParsing="false" onAction="#onKickLobby" text="Kick"/>
             </children>
         </AnchorPane>
     </children>

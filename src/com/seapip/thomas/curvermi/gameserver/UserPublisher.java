@@ -19,7 +19,8 @@ public class UserPublisher extends UnicastRemoteObject implements IUserPublisher
 
     public String login(String username, String password) {
         String token = new BigInteger(130, random).toString(32);
-        users.put(token, 5);
+        users.put(token, (int) Math.floor(Math.random() * 10000));
+        System.out.println(token);
         return token;
     }
 

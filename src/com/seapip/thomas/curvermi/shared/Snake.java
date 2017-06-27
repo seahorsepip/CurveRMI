@@ -9,8 +9,9 @@ import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Snake implements Serializable {
-    private static final double SPEED = 0.05f; //Movement speed in px/ms
+    private static final double SPEED = 0.02f; //Movement speed in px/ms
     private static final double RADIUS = 20; //Radius in px of a curve
+
 
     private Point start;
     private ArrayList<Curve> curves;
@@ -19,7 +20,6 @@ public class Snake implements Serializable {
 
     public Snake(Point start) {
         this.start = start;
-        this.start = new Point(200, 350);
         curves = new ArrayList<>();
         hue = ThreadLocalRandom.current().nextInt(0, 361);
     }

@@ -2,6 +2,7 @@ package com.seapip.thomas.curvermi.client;
 
 import com.seapip.thomas.curvermi.shared.*;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -28,13 +30,14 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
 
     private IUserPublisher userPublisher;
-    private IGamePublisher gamepublisher;
+    private IGamePublisher gamePublisher;
     private ILobbyPublisher lobbyPublisher;
     private String userToken;
     private String gameToken;
     private String lobbyToken;
     private List<Player> players;
     private boolean keyDown;
+    private User selectedUser;
     @FXML
     private AnchorPane loginPane;
     @FXML
@@ -57,6 +60,8 @@ public class Controller implements Initializable {
     private TextField lobbyNameField;
     @FXML
     private PasswordField lobbyPasswordField;
+    @FXML
+    private ListView<User> userList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -65,8 +70,7 @@ public class Controller implements Initializable {
             Registry registry = LocateRegistry.getRegistry();
             userPublisher = (IUserPublisher) registry.lookup("UserPublisher");
             lobbyPublisher = (ILobbyPublisher) registry.lookup("LobbyPublisher");
-            gamepublisher = (IGamePublisher) registry.lookup("GamePublisher");
-            userToken = userPublisher.login("seahorsepip", "12345");
+            gamePublisher = (IGamePublisher) registry.lookup("GamePublisher");
         } catch (RemoteException | NotBoundException ignored) {
             //Ignore
         }
@@ -105,7 +109,7 @@ public class Controller implements Initializable {
                     return;
             }
             keyDown = true;
-            gamepublisher.turn(gameToken, userToken, direction);
+            gamePublisher.turn(gameToken, userToken, direction);
         }
     }
 
@@ -113,7 +117,7 @@ public class Controller implements Initializable {
     void onKeyReleased(KeyEvent event) throws RemoteException {
         if (event.getCode() == KeyCode.LEFT || event.getCode() == KeyCode.RIGHT) {
             event.consume();
-            gamepublisher.turn(gameToken, userToken, Direction.FORWARD);
+            gamePublisher.turn(gameToken, userToken, Direction.FORWARD);
             keyDown = false;
         }
     }
@@ -123,10 +127,11 @@ public class Controller implements Initializable {
         String username = usernameField.getText();
         String password = passwordField.getText();
         userToken = userPublisher.login(username, password);
+        /*
         if (userToken == null) {
             userPublisher.register(username, password);
             userToken = userPublisher.login(username, password);
-        }
+        }*/
         loginPane.setVisible(false);
         lobbiesPane.setVisible(true);
         loadLobbies();
@@ -154,6 +159,7 @@ public class Controller implements Initializable {
 
     private void joinLobby(String lobbyToken, String password) throws RemoteException, NotBoundException {
         this.lobbyToken = lobbyToken;
+        System.out.println(userToken);
         lobbyPublisher.join(lobbyToken, userToken, password);
         new LobbyListener(lobbyToken, userToken, new LobbyListener.Callback() {
             @Override
@@ -163,14 +169,15 @@ public class Controller implements Initializable {
 
             @Override
             public void onUsers(List<User> values) {
-
+                Platform.runLater(() -> userList.setItems(FXCollections.observableList(values)));
             }
 
             @Override
             public void onGameToken(String value) {
                 try {
                     gameToken = value;
-                    gamepublisher.connect(gameToken, userToken);
+                    System.out.println(userToken);
+                    gamePublisher.connect(gameToken, userToken);
                     new GameListener(gameToken, new GameListener.Callback() {
                         @Override
                         public void onPlayers(List<Player> values) {
@@ -190,7 +197,7 @@ public class Controller implements Initializable {
                         @Override
                         public void onTurn(Turn value) {
                             for (Player player : players) {
-                                if (player.getUser().getUsername().equals(value.getUser().getUsername())) {
+                                if (player.getUser().getId() == value.getUser().getId()) {
                                     player.getSnake().turn(value.getCurve().getDirection(), value.getCurve().getDate());
                                 }
                             }
@@ -215,8 +222,9 @@ public class Controller implements Initializable {
 
     @FXML
     void onKickLobby(ActionEvent event) throws RemoteException, NotLoggedInException, NotBoundException {
-        int userId = 342;
-        lobbyPublisher.kick(lobbyToken, userToken, userId);
+        if(selectedUser != null) {
+            lobbyPublisher.kick(lobbyToken, userToken, selectedUser.getId());
+        }
     }
 
     @FXML
@@ -226,5 +234,17 @@ public class Controller implements Initializable {
 
     private void loadLobbies() throws RemoteException {
         lobbiesList.setItems(FXCollections.observableArrayList(lobbyPublisher.get()));
+    }
+
+    @FXML
+    void onLobbyListClick(MouseEvent event) throws RemoteException, NotBoundException {
+        Lobby lobby = lobbiesList.getSelectionModel().getSelectedItem();
+        joinLobby(lobby.getToken(), null);
+        lobbiesPane.setVisible(false);
+    }
+
+    @FXML
+    void onLobbyUserListClick(MouseEvent event) {
+        selectedUser = userList.getSelectionModel().getSelectedItem();
     }
 }
